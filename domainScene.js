@@ -47,8 +47,12 @@ const domainScene = new Scenes.WizardScene(
 
         console.log(file)
 
+        var messageText = "Некорректный ввод\nОтправьте ключевые слова:"
+        for (var supportedFormat of supportedFormats) messageText += `\n- Файл .${supportedFormat}`
+        messageText += "\n- Ссылка на Топвизор (Пример: https://tpv.sr/uhHFV4-9C/)"
+
         var fileIsSupported = file?.file_name && supportedFormats.some(format => file.file_name.endsWith(`.${format}`));
-        if (!text?.startsWith("https://tpv.sr/") && !fileIsSupported && !keywordsAreSkipped) return await ctx.reply("Некорректный ввод\nПришлите либо файл .txt, либо ссылку на Топвизор (Пример: https://tpv.sr/uhHFV4-9C/)", {reply_markup: {inline_keyboard: [[{ text: "Назад", callback_data: "back_to_domain" }], [cancelButton]]}}).catch(err => console.log(err));
+        if (!text?.startsWith("https://tpv.sr/") && !fileIsSupported && !keywordsAreSkipped) return await ctx.reply(messageText, {reply_markup: {inline_keyboard: [[{ text: "Назад", callback_data: "back_to_domain" }], [cancelButton]]}}).catch(err => console.log(err));
 
         ctx.wizard.state.keywords = fileIsSupported ? `file_id: ${file.file_id}` : text;
         if(keywordsAreSkipped) ctx.wizard.state.keywords = "skipped"
@@ -93,11 +97,6 @@ const domainScene = new Scenes.WizardScene(
             stop: `Проект${moreThenOneDomain ? "ы" : ""} отключен${moreThenOneDomain ? "ы" : ""}`
         }
 
-        await writeNewOrder(orderId, ctx.from.id, ctx.wizard.state.domains, statusToAnswer[action]).catch(err => console.log(err))
-        
-        await ctx.reply("Ваш заказ передан в тех отдел. Ожидайте").catch(err => console.log(err));
-        await ctx.reply(`<b>Для нового заказа нажмите /start</b>`, {parse_mode: "HTML"}).catch(err => console.log(err))
-
         var statusToText = {
             test: `Домен${moreThenOneDomain ? "ы" : ""} на тест`,
             work: `Домен${moreThenOneDomain ? "ы" : ""} в работу`,
@@ -118,8 +117,22 @@ const domainScene = new Scenes.WizardScene(
         };
 
         var adminChatId = process.env.adminChatId;
-        if (containsFile) ctx.telegram.sendDocument(adminChatId, ctx.wizard.state.keywords.replace("file_id: ", ""), {reply_markup: {inline_keyboard: [statusToButton[action]]}, caption: messageText, parse_mode: "HTML" }).catch(err => console.log(err));
-        else ctx.telegram.sendMessage(adminChatId, messageText, {reply_markup: {inline_keyboard: [statusToButton[action]]}, parse_mode: "HTML"}).catch(err => console.log(err));
+        var inlineKeyboard = [statusToButton[action]];
+        if (containsFile) ctx.wizard.state.adminsMessage = await ctx.telegram.sendDocument(adminChatId, ctx.wizard.state.keywords.replace("file_id: ", ""), {reply_markup: {inline_keyboard: inlineKeyboard}, caption: messageText, parse_mode: "HTML" }).catch(err => console.log(err));
+        else ctx.wizard.state.adminsMessage = await ctx.telegram.sendMessage(adminChatId, messageText, {reply_markup: {inline_keyboard: inlineKeyboard}, parse_mode: "HTML"}).catch(err => console.log(err));
+        const { chat, message_id } = ctx.wizard.state.adminsMessage
+        
+        var adminsMessage = {
+            chatId: chat.id,
+            messageId: message_id,
+            buttonText: statusToAnswer[action],
+            buttonTouched: false
+        }
+
+        await writeNewOrder(orderId, ctx.from.id, ctx.wizard.state.domains, statusToAnswer[action], adminsMessage).catch(err => console.log(err))
+        
+        await ctx.reply("Ваш заказ передан в тех отдел. Ожидайте").catch(err => console.log(err));
+        await ctx.reply(`<b>Для нового заказа нажмите /start</b>`, {parse_mode: "HTML"}).catch(err => console.log(err))
 
         return ctx.scene.leave().catch(err => console.log(err));
     }
@@ -138,10 +151,10 @@ async function getNewId() {
     return lastOrderId + 1
 }
 
-async function writeNewOrder(orderId, chatId, domains, answer) {
+async function writeNewOrder(orderId, chatId, domains, answer, adminsMessage) {
     if(!fs.existsSync(ordersFilePath)) fs.writeFileSync(ordersFilePath, "[]", "utf-8")
     var orders = JSON.parse(fs.readFileSync(ordersFilePath, "utf-8"));
-    orders.push({orderId, chatId, domains, answer})
+    orders.push({orderId, chatId, domains, answer, adminsMessage})
     fs.writeFileSync(ordersFilePath, JSON.stringify(orders, null, 4), "utf-8")
 }
 
