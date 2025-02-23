@@ -32,7 +32,7 @@ bot.action(/_done(\d+)$/ig, async ctx => {
     await ctx.telegram.editMessageReplyMarkup(chatId, messageId, undefined, {inline_keyboard: [[{text: `${prefix} ${buttonText}`, callback_data: "processedOrder"}]]}).catch(err => console.log(err));
 })
 
-bot.start(ctx => ctx.scene.enter("domainScene"))
+bot.start(ctx => ctx.scene.enter("domainScene", {startMessageId: ctx.message.message_id}))
 
 bot.command("getId", ctx => ctx.reply(ctx.chat.id).catch(err => console.log(err)))
 

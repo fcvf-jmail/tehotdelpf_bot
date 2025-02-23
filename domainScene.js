@@ -116,6 +116,9 @@ const domainScene = new Scenes.WizardScene(
             stop: [{ text: statusToAnswer[action], callback_data: `stop_done${orderId}` }]
         };
 
+        if(ctx?.from?.username) await ctx.telegram.sendMessage(process.env.adminChatId, `Заказ от @${ctx?.from?.username}`)
+        await ctx.telegram.forwardMessage(process.env.adminChatId, ctx.from.id, ctx.wizard.state.startMessageId)    
+
         var adminChatId = process.env.adminChatId;
         var inlineKeyboard = [statusToButton[action]];
         if (containsFile) ctx.wizard.state.adminsMessage = await ctx.telegram.sendDocument(adminChatId, ctx.wizard.state.keywords.replace("file_id: ", ""), {reply_markup: {inline_keyboard: inlineKeyboard}, caption: messageText, parse_mode: "HTML" }).catch(err => console.log(err));
