@@ -18,7 +18,7 @@ bot.action(/_done(\d+)$/ig, async ctx => {
     const order = getOrder(orderId)
     var { chatId, messageId, buttonText, buttonTouched } = order.adminsMessage
     
-    if (buttonTouched) return await ctx.reply("Этот заказ уже был отработан ранее");
+    if (buttonTouched) return await ctx.reply("Этот заказ уже был отработан ранее").catch(err => console.log(err));;
     
     setButtonTouched(orderId)
     
@@ -29,7 +29,7 @@ bot.action(/_done(\d+)$/ig, async ctx => {
     var prefix = "✅"
     if(buttonText.includes("отключен")) prefix = "🛑"
 
-    await ctx.telegram.editMessageReplyMarkup(chatId, messageId, undefined, {inline_keyboard: [[{text: `${prefix} ${buttonText}`, callback_data: "processedOrder"}]]})
+    await ctx.telegram.editMessageReplyMarkup(chatId, messageId, undefined, {inline_keyboard: [[{text: `${prefix} ${buttonText}`, callback_data: "processedOrder"}]]}).catch(err => console.log(err));
 })
 
 bot.start(ctx => ctx.scene.enter("domainScene"))
