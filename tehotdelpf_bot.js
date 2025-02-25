@@ -18,7 +18,7 @@ bot.action(/_done(\d+)$/ig, async ctx => {
     const order = getOrder(orderId)
     var { chatId, messageId, buttonText, buttonTouched } = order.adminsMessage
     
-    if (buttonTouched) return await ctx.reply("Этот заказ уже был отработан ранее").catch(err => console.log(err));;
+    // if (buttonTouched) return await ctx.reply("Этот заказ уже был отработан ранее").catch(err => console.log(err));;
     
     setButtonTouched(orderId)
     
