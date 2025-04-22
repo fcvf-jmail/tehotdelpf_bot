@@ -1,0 +1,19 @@
+[
+    {
+        "orderId": 1,
+        "chatId": 1386450473,
+        "domains": [
+            "example1.com",
+            "example2.com"
+        ],
+        "answer": "Проекты отключены"
+    },
+    {
+        "orderId": 2,
+        "chatId": 1386450473,
+        "domains": [
+            "example2.com"
+        ],
+        "answer": "Правки произведены"
+    }
+]
