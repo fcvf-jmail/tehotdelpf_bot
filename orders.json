@@ -1,0 +1,76 @@
+[
+    {
+        "orderId": 1,
+        "chatId": 1386450473,
+        "domains": [
+            "example1.com",
+            "example2.com"
+        ],
+        "answer": "Проекты запущены",
+        "adminsMessage": {
+            "chatId": 1386450473,
+            "messageId": 9561,
+            "buttonText": "Проекты запущены",
+            "buttonTouched": false
+        }
+    },
+    {
+        "orderId": 2,
+        "chatId": 1386450473,
+        "domains": [
+            "example1.com",
+            "example2.com"
+        ],
+        "answer": "Проекты отключены",
+        "adminsMessage": {
+            "chatId": 1386450473,
+            "messageId": 9641,
+            "buttonText": "Проекты отключены",
+            "buttonTouched": false
+        }
+    },
+    {
+        "orderId": 3,
+        "chatId": 1386450473,
+        "domains": [
+            "example1.com",
+            "example2.com"
+        ],
+        "answer": "Проекты отключены",
+        "adminsMessage": {
+            "chatId": 1386450473,
+            "messageId": 9651,
+            "buttonText": "Проекты отключены",
+            "buttonTouched": false
+        }
+    },
+    {
+        "orderId": 4,
+        "chatId": 1386450473,
+        "domains": [
+            "xample1.com",
+            "example2.com"
+        ],
+        "answer": "Тесты запущены",
+        "adminsMessage": {
+            "chatId": 1386450473,
+            "messageId": 9661,
+            "buttonText": "Тесты запущены",
+            "buttonTouched": false
+        }
+    },
+    {
+        "orderId": 5,
+        "chatId": 1386450473,
+        "domains": [
+            "example2.com"
+        ],
+        "answer": "Проект запущен",
+        "adminsMessage": {
+            "chatId": 1386450473,
+            "messageId": 9671,
+            "buttonText": "Проект запущен",
+            "buttonTouched": false
+        }
+    }
+]
