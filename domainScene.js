@@ -129,7 +129,7 @@ const domainScene = new Scenes.WizardScene(
         };
 
         if (ctx?.from?.username) await ctx.telegram.sendMessage(process.env.adminChatId, `Заказ от @${ctx?.from?.username}`).catch(err => console.log(err))
-        else await ctx.telegram.forwardMessage(process.env.adminChatId, ctx.from.id, ctx.ctx.wizard.state.startMessageId).catch(err => console.log(err))
+        else await ctx.telegram.forwardMessage(process.env.adminChatId, ctx.from.id, ctx.wizard.state.startMessageId).catch(err => console.log(err))
 
         var adminChatId = process.env.adminChatId;
         var inlineKeyboard = [statusToButton[action]];
