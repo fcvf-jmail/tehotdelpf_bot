@@ -114,10 +114,11 @@ const domainScene = new Scenes.WizardScene(
         var containsPhoto = ctx.wizard.state.keywords.startsWith("photo_file_id");
         var keywordsAreSkipped = ctx.wizard.state.keywords == "skipped"
         var messageText = `<b>${statusToText[action]}</b>\n\nДомены:\n${ctx.wizard.state.domains.join("\n")}`;
+
         if (!keywordsAreSkipped) {
             if (containsFile) messageText += "\n\nКлючевые слова: в файле"
             else if (containsPhoto) messageText += `\n\nКлючевые слова: на фото + ${ctx.wizard.state.photoCaption}`
-            else messageText = `\n\nКлючевые слова: ${ctx.wizard.state.keywords}`
+            else messageText += `\n\nКлючевые слова: ${ctx.wizard.state.keywords}`
         }
 
         var statusToButton = {
